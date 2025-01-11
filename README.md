@@ -70,9 +70,12 @@ spark_df = spark_df.drop("Unnamed: 0")
 spark_df.write.saveAsTable("wikipedia")
 ```
 
-🔗 **GitHub Repository:**
-- Dive into the codebase (files .ipynb).
+
 
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome. 
+
+
+🔗 **GitHub Repository:**
+- Dive into the codebase of the project (files .ipynb).
