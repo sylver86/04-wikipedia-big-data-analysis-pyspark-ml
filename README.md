@@ -71,7 +71,7 @@ spark_df.write.saveAsTable("wikipedia")
 ```
 
 🔗 **GitHub Repository:**
-Dive into the codebase (files .ipynb).
+- Dive into the codebase (files .ipynb).
 
 ## 🤝 Contributing
 
