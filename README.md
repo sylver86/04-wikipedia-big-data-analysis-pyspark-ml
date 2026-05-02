@@ -11,14 +11,6 @@ Analisi esplorativa e classificazione testuale multi-classe su articoli Wikipedi
 
 Competenze applicabili a sistemi di content intelligence, categorizzazione automatica documenti, customer segmentation testuale e fraud detection in contesti enterprise.
 
-## Valore Enterprise
-
-| Settore / Azienda | Rilevanza |
-|-------------------|-----------|
-| IT Consulting (NTT Data, Data Reply, Accenture) | Pipeline NLP distribuita su Databricks/Spark |
-| Media, Publishing, Knowledge Management | Categorizzazione automatica contenuti su larga scala |
-| Financial Services | Text classification per compliance e fraud detection |
-| Engineering Informatica | Integrazione Spark in architetture dati enterprise |
 
 ## Dataset
 
