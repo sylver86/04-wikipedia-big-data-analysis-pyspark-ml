@@ -1,68 +1,83 @@
-# 📊 Big Data Databricks & PySpark: Wikipedia Content Analysis and Classification
+# Wikipedia Content Analysis & Classification — PySpark + Databricks
 
-## 📋 Project Overview
+![PySpark](https://img.shields.io/badge/PySpark-3.x-E25A1C?logo=apachespark&logoColor=white)
+![Databricks](https://img.shields.io/badge/Databricks-Platform-FF3621?logo=databricks&logoColor=white)
+![NLP](https://img.shields.io/badge/NLP-SparkNLP-4CAF50)
+![ML](https://img.shields.io/badge/Classification-Logistic%20Regression-blue)
 
-This project involves an extensive Exploratory Data Analysis (EDA) and text classification task on Wikipedia data using Databricks and PySpark. As a Data Scientist for Wikimedia, the goal is to statistically analyze and evaluate the informational content offered by Wikipedia across various categories.
+## Overview
 
-## 🎯 Objectives
+Large-scale EDA and multi-class text classification on Wikipedia articles using Databricks and PySpark. Analyses content across 15 knowledge categories, then trains and compares two Logistic Regression classifiers — one on article **summaries**, one on **full article bodies** — to determine which text signal better predicts category at scale.
 
-1. Perform EDA on Wikipedia data
-2. Develop and test a text classifier for future article categorization
+Demonstrates end-to-end Big Data NLP: distributed preprocessing with SparkNLP, TF-IDF feature engineering, and multi-class model evaluation using PySpark MLlib.
 
-## 📚 Dataset Description
+---
 
-The dataset contains Wikipedia articles with the following columns:
-- **title**: Article title
-- **summary**: Article introduction
-- **documents**: Full article content
-- **categoria**: Associated category
+## Dataset
 
-Categories include: culture, economics, energy, engineering, finance, humanities, medicine, pets, politics, research, science, sports, technology, trade, transport
+| Attribute | Detail |
+|-----------|--------|
+| Source | Wikipedia articles (Databricks environment) |
+| Fields | `title`, `summary`, `documents`, `categoria` |
+| Categories (15) | culture, economics, energy, engineering, finance, humanities, medicine, pets, politics, research, science, sports, technology, trade, transport |
 
-## 🔍 EDA Process
+---
 
-The Exploratory Data Analysis was conducted using PySpark and included the following steps:
+## Pipeline
 
-1. Data Cleaning: Used SparkNLP to normalize text, lemmatize words, and remove stopwords.
-2. Text Vectorization: Implemented CountVectorizer to convert text into numerical features.
-3. Statistical Analysis: For each category, calculated:
-   - Number of articles
-   - Average number of words used
-   - Maximum number of words in the longest article
-   - Minimum number of words in the shortest article
-4. TF-IDF Analysis: Applied TF-IDF (Term Frequency-Inverse Document Frequency) to identify the most representative words for each category.
+```
+Raw Wikipedia CSV
+      │
+      ▼
+SparkNLP Preprocessing
+(normalize · lemmatize · remove stopwords)
+      │
+      ▼
+CountVectorizer → TF-IDF
+      │
+      ▼
+┌─────────────────┬────────────────────┐
+│ Model A         │ Model B            │
+│ summary field   │ documents field    │
+│ LogReg (LR)     │ LogReg (LR)        │
+└────────┬────────┴────────────────────┘
+         │
+         ▼
+MulticlassClassificationEvaluator
+(accuracy · F1 comparison)
+```
 
-## 🤖 Classification Model
+---
 
-Two separate logistic regression models were created, one for the "summary" field and another for the "documents" field:
+## Analysis Stages
 
-1. Data Preparation:
-   - Split the dataset into training and test sets
-   - Used HashingTF for feature vectorization
+### EDA (PySpark + SparkNLP)
 
-2. Model Training:
-   - Implemented Logistic Regression using PySpark's ML library
-   - Trained the model on the vectorized data
+Per-category statistics computed at distributed scale:
 
-3. Model Evaluation:
-   - Used MulticlassClassificationEvaluator to assess model performance
-   - Calculated accuracy and other relevant metrics
+| Metric | Description |
+|--------|-------------|
+| Article count | Number of articles per category |
+| Word count stats | Average / max / min words per article |
+| TF-IDF top terms | Most representative terms per category |
 
-The models were compared to determine which field (summary or documents) provided better classification accuracy.
+### Classification Models
 
-## 🛠️ Technologies Used
+| Model | Input | Vectorization | Notes |
+|-------|-------|---------------|-------|
+| A | `summary` (intro paragraph) | HashingTF | Compact signal, faster training |
+| B | `documents` (full article) | HashingTF | Rich context, higher dimensionality |
 
-- Databricks
-- PySpark
-- Spark NLP
-- PySpark ML (for machine learning tasks)
+Both evaluated with `MulticlassClassificationEvaluator` on held-out test split. Full accuracy metrics and per-class results available in the notebook.
 
-## 🔧 Setup
+---
 
-To load the dataset and create a Spark table:
+## Setup
 
 ```python
+# Load dataset into Databricks environment
 !wget https://proai-datasets.s3.eu-west-3.amazonaws.com/wikipedia.csv
+
 import pandas as pd
 dataset = pd.read_csv('/databricks/driver/wikipedia.csv')
 spark_df = spark.createDataFrame(dataset)
@@ -70,12 +85,10 @@ spark_df = spark_df.drop("Unnamed: 0")
 spark_df.write.saveAsTable("wikipedia")
 ```
 
+Open and run `wikipedia_analysis.ipynb` in a Databricks notebook cluster with SparkNLP installed.
 
+---
 
-## 🤝 Contributing
+## Technologies
 
-Contributions, issues, and feature requests are welcome. 
-
-
-🔗 **GitHub Repository:**
-- Dive into the codebase of the project (files .ipynb).
+`PySpark 3.x` · `Databricks` · `Spark NLP` · `PySpark MLlib` · `HashingTF` · `LogisticRegression` · `MulticlassClassificationEvaluator`
